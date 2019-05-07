@@ -164,4 +164,64 @@ class StarwarsAPIClient {
         
         task.resume()
     }
+    
+    func getVehicle(with request: URLRequest, completion: @escaping (Vehicle?, APIError?) -> Void) {
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            DispatchQueue.main.async {
+                if let data = data {
+                    guard let response = response as? HTTPURLResponse else {
+                        completion(nil, .invalidRequest)
+                        return
+                    }
+                    
+                    if response.statusCode == 200 {
+                        do {
+                            let vehicle = try self.decoder.decode(Vehicle.self, from: data)
+                            completion(vehicle, nil)
+                        } catch {
+                            completion(nil, .jsonConversionError)
+                        }
+                    } else {
+                        completion(nil, .invalidRequest)
+                    }
+                } else {
+                    completion(nil, .invalidData)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func getStarship(with request: URLRequest, completion: @escaping (Starship?, APIError?) -> Void) {
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            DispatchQueue.main.async {
+                if let data = data {
+                    guard let response = response as? HTTPURLResponse else {
+                        completion(nil, .invalidRequest)
+                        return
+                    }
+                    
+                    if response.statusCode == 200 {
+                        do {
+                            let starship = try self.decoder.decode(Starship.self, from: data)
+                            completion(starship, nil)
+                        } catch {
+                            completion(nil, .jsonConversionError)
+                        }
+                    } else {
+                        completion(nil, .invalidRequest)
+                    }
+                } else {
+                    completion(nil, .invalidData)
+                }
+            }
+        }
+        
+        task.resume()
+    }
 }

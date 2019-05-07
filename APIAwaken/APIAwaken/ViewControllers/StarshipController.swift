@@ -20,8 +20,11 @@ class StarshipController: UITableViewController {
     @IBOutlet weak var starshipPicker: UIPickerView!
     @IBOutlet weak var smallestLabel: UILabel!
     @IBOutlet weak var largestLabel: UILabel!
+    @IBOutlet weak var costSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var lengthSegmentedControl: UISegmentedControl!
     
     var starships = [Starship]()
+    var exchangeRate: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +34,8 @@ class StarshipController: UITableViewController {
     func updateWith(_ starship: Starship) {
         nameLabel.text = starship.name
         manufacturerLabel.text = starship.manufacturer
-        costLabel.text = starship.costInCredits
-        lengthLabel.text = starship.length
+        changeCostMetric(costSegmentedControl)
+        changeLengthMetric(lengthSegmentedControl)
         classLabel.text = starship.starshipClass
         crewLabel.text = starship.crew
     }
@@ -59,6 +62,41 @@ class StarshipController: UITableViewController {
         
         smallestLabel.text = smallest.name
         largestLabel.text = largest.name
+    }
+    
+    
+    @IBAction func changeCostMetric(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            if let exchangeRate = exchangeRate {
+                if let text = Double(starships[starshipPicker.selectedRow(inComponent: 0)].costInCredits) {
+                    self.costLabel.text = "$\(exchangeRate / text)"
+                }
+                
+            } else {
+                let alert = UIAlertController(title: "Exchange Rate", message: "Please enter an exchange rate", preferredStyle: .alert)
+                alert.addTextField(configurationHandler: nil)
+                let action = UIAlertAction(title: "Ok", style: .default) { (action) in
+                    self.exchangeRate = Double(alert.textFields![0].text!)!
+                    let cost = Double(self.starships[self.starshipPicker.selectedRow(inComponent: 0)].costInCredits)!
+                    self.costLabel.text = "$\(cost / self.exchangeRate!)"
+                }
+                alert.addAction(action)
+                present(alert, animated: true)
+            }
+            
+        } else {
+            costLabel.text = starships[starshipPicker.selectedRow(inComponent: 0)].costInCredits
+        }
+    }
+    @IBAction func changeLengthMetric(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 1 {
+            let heightInCm = Double(starships[starshipPicker.selectedRow(inComponent: 0)].length)!
+            let heightInMeters = heightInCm / 100
+            lengthLabel.text = "\(heightInMeters)m"
+        } else {
+            let starshipHeight = Double(starships[starshipPicker.selectedRow(inComponent: 0)].length)!
+            lengthLabel.text = "\(starshipHeight)cm"
+        }
     }
 }
 

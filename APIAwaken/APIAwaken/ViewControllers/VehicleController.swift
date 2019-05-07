@@ -17,11 +17,14 @@ class VehicleController: UITableViewController {
     @IBOutlet weak var classLabel: UILabel!
     @IBOutlet weak var crewLabel: UILabel!
     @IBOutlet weak var vehiclePicker: UIPickerView!
+    @IBOutlet weak var lengthSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var costSegmentedControl: UISegmentedControl!
     
     @IBOutlet weak var smallestLabel: UILabel!
     @IBOutlet weak var largestLabel: UILabel!
     
     var vehicles = [Vehicle]()
+    var exchangeRate: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +34,8 @@ class VehicleController: UITableViewController {
     func updateWith(_ vehicle: Vehicle) {
         nameLabel.text = vehicle.name
         manufacturerLabel.text = vehicle.manufacturer
-        costLabel.text = vehicle.costInCredits
-        lengthLabel.text = vehicle.length
+        changeCostMetric(costSegmentedControl)
+        changeLengthMetric(lengthSegmentedControl)
         classLabel.text = vehicle.vehicleClass
         crewLabel.text = vehicle.crew
     }
@@ -60,6 +63,41 @@ class VehicleController: UITableViewController {
         
         smallestLabel.text = smallest.name
         largestLabel.text = largest.name
+    }
+    
+    @IBAction func changeLengthMetric(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 1 {
+            let heightInCm = Double(vehicles[vehiclePicker.selectedRow(inComponent: 0)].length)!
+            let heightInMeters = heightInCm / 100
+            lengthLabel.text = "\(heightInMeters)m"
+        } else {
+            let vehicleHeight = Double(vehicles[vehiclePicker.selectedRow(inComponent: 0)].length)!
+            lengthLabel.text = "\(vehicleHeight)cm"
+        }
+    }
+    
+    @IBAction func changeCostMetric(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            if let exchangeRate = exchangeRate {
+                if let text = Double(vehicles[vehiclePicker.selectedRow(inComponent: 0)].costInCredits) {
+                    self.costLabel.text = "$\(exchangeRate / text)"
+                }
+                
+            } else {
+                let alert = UIAlertController(title: "Exchange Rate", message: "Please enter an exchange rate", preferredStyle: .alert)
+                alert.addTextField(configurationHandler: nil)
+                let action = UIAlertAction(title: "Ok", style: .default) { (action) in
+                    self.exchangeRate = Double(alert.textFields![0].text!)!
+                    let cost = Double(self.vehicles[self.vehiclePicker.selectedRow(inComponent: 0)].costInCredits)!
+                    self.costLabel.text = "$\(cost / self.exchangeRate!)"
+                }
+                alert.addAction(action)
+                present(alert, animated: true)
+            }
+            
+        } else {
+            costLabel.text = vehicles[vehiclePicker.selectedRow(inComponent: 0)].costInCredits
+        }
     }
 }
 

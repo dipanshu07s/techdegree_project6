@@ -17,4 +17,6 @@ class Character: Codable {
     let height: String
     let eyeColor: String
     let hairColor: String
+    let vehicles: [String]
+    let starships: [String]
 }
