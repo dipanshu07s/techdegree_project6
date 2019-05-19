@@ -101,6 +101,10 @@ class VehicleController: UITableViewController {
             costLabel.text = vehicles[vehiclePicker.selectedRow(inComponent: 0)].costInCredits
         }
     }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
 }
 
 extension VehicleController: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -120,6 +124,7 @@ extension VehicleController: UIPickerViewDelegate, UIPickerViewDataSource {
         
         updateWith(vehicles[row])
     }
+    
     
     
 }

@@ -129,6 +129,9 @@ class CharacterController: UITableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
     
 }
 
@@ -152,4 +155,6 @@ extension CharacterController: UIPickerViewDelegate, UIPickerViewDataSource {
         getStarships()
         updateWith(characters[row])
     }
+    
+    
 }

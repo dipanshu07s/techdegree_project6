@@ -100,6 +100,10 @@ class StarshipController: UITableViewController {
             lengthLabel.text = "\(starshipHeight)cm"
         }
     }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
 }
 
 extension StarshipController: UIPickerViewDelegate, UIPickerViewDataSource {
