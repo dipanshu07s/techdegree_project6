@@ -69,7 +69,9 @@ class StarshipController: UITableViewController {
         if sender.selectedSegmentIndex == 0 {
             if let exchangeRate = exchangeRate {
                 if let text = Double(starships[starshipPicker.selectedRow(inComponent: 0)].costInCredits) {
-                    self.costLabel.text = "$\(exchangeRate / text)"
+                    self.costLabel.text = "$\(text / exchangeRate)"
+                } else {
+                    self.costLabel.text = "unknown"
                 }
                 
             } else {

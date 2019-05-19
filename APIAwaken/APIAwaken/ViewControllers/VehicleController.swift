@@ -80,7 +80,9 @@ class VehicleController: UITableViewController {
         if sender.selectedSegmentIndex == 0 {
             if let exchangeRate = exchangeRate {
                 if let text = Double(vehicles[vehiclePicker.selectedRow(inComponent: 0)].costInCredits) {
-                    self.costLabel.text = "$\(exchangeRate / text)"
+                    self.costLabel.text = "$\(text / exchangeRate)"
+                } else {
+                    self.costLabel.text = "unknown"
                 }
                 
             } else {
