@@ -89,9 +89,15 @@ class VehicleController: UITableViewController {
                 let alert = UIAlertController(title: "Exchange Rate", message: "Please enter an exchange rate", preferredStyle: .alert)
                 alert.addTextField(configurationHandler: nil)
                 let action = UIAlertAction(title: "Ok", style: .default) { (action) in
-                    self.exchangeRate = Double(alert.textFields![0].text!)!
-                    let cost = Double(self.vehicles[self.vehiclePicker.selectedRow(inComponent: 0)].costInCredits)!
-                    self.costLabel.text = "$\(cost / self.exchangeRate!)"
+                    if let text = alert.textFields![0].text, let exchangeRate = Double(text) {
+                        let cost = Double(self.vehicles[self.vehiclePicker.selectedRow(inComponent: 0)].costInCredits)!
+                        self.costLabel.text = "$\(cost / exchangeRate)"
+                        self.exchangeRate = exchangeRate
+                    } else {
+                        self.costLabel.text = "Invalid rate"
+                    }
+                    
+                    
                 }
                 alert.addAction(action)
                 present(alert, animated: true)

@@ -28,6 +28,7 @@ class ViewController: UITableViewController {
                     destination.characterPicker.reloadAllComponents()
                     if destination.characters.count == count {
                         destination.updateLength()
+                        destination.segmentedControl.isHidden = false
                     }
                     
                 } else if let error = error {
@@ -46,9 +47,12 @@ class ViewController: UITableViewController {
             client.getVehicleData(for: EndpointType.vehicles.request) { (vehicle, count, error) in
                 if let vehicle = vehicle {
                     destination.vehicles += vehicle
+                    destination.lengthSegmentedControl.isHidden = false
+                    destination.costSegmentedControl.isHidden = false
                     destination.vehiclePicker.reloadAllComponents()
                     if destination.vehicles.count == count {
                         destination.updateLength()
+                        
                     }
                     
                 } else if let error = error {
@@ -67,9 +71,12 @@ class ViewController: UITableViewController {
             client.getStarshipData(for: EndpointType.starships.request) { (starship, count, error) in
                 if let starship = starship {
                     destination.starships += starship
+                    destination.lengthSegmentedControl.isHidden = false
+                    destination.costSegmentedControl.isHidden = false
                     destination.starshipPicker.reloadAllComponents()
                     if destination.starships.count == count {
                         destination.updateLength()
+                        
                     }
                     
                 } else if let error = error {
